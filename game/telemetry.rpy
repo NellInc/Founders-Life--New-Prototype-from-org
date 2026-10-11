@@ -7,6 +7,9 @@ init python:
         store.gid = uuid.uuid4().hex
 
     def send_end_game_data():
+        if not getattr(renpy.store, "is_telemetry_allowed", False):
+            return
+
         persistent.game_data[store.gid] = [persistent.room_id, datetime.date.today(), store.founder_name, store.total_days, store.founder_score]
         renpy.invoke_in_thread(_send_data)
 
@@ -20,6 +23,9 @@ init python:
         renpy.invoke_in_thread(_delete_room, room_id=room_id, password=password)
 
     def create_game_room_id(last_room_id):
+        if not getattr(renpy.store, "is_telemetry_allowed", False):
+            return
+
         URL = "https://script.google.com/macros/s/AKfycbzLqfoUlNvdOvw3nW-jOxY95a-76zexvTFXOYw_kq0FfCXSE3MV5ibOiNUcSObgymyETQ/exec?sheet=" + persistent.room_id + "&password=" + persistent.room_password
         try:
             r = requests.get(URL, timeout=30)
@@ -34,6 +40,9 @@ init python:
             renpy.show_screen("err_msg", "No internet.", show_button="Okay")
 
     def set_room_id(last_room_id):
+        if not getattr(renpy.store, "is_telemetry_allowed", False):
+            return
+
         URL = "https://script.google.com/macros/s/AKfycbzLqfoUlNvdOvw3nW-jOxY95a-76zexvTFXOYw_kq0FfCXSE3MV5ibOiNUcSObgymyETQ/exec?sheet=" + persistent.room_id
         try:
             r = requests.get(URL, timeout=30)
@@ -47,6 +56,9 @@ init python:
             renpy.show_screen("err_msg", "No internet.", show_button="Okay")
 
     def _send_data():
+        if not getattr(renpy.store, "is_telemetry_allowed", False):
+            return
+
         if persistent.room_id:
             URL = "https://script.google.com/macros/s/AKfycbzLqfoUlNvdOvw3nW-jOxY95a-76zexvTFXOYw_kq0FfCXSE3MV5ibOiNUcSObgymyETQ/exec?sheet=" + persistent.room_id
         else:
